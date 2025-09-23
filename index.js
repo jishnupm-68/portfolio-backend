@@ -2,13 +2,19 @@ const express = require("express");
 const { connectDb } = require("./config/db");
 const userRouter = require("./src/routes/user");
 const app = express()
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
+const projectRouter = require("./src/routes/project");
+const userProfileRouter = require("./src/routes/userProfile");
+const npmModuleRouter = require("./src/routes/npmModule");
 require("dotenv").config()
 
-
+app.use(cookieParser())
 app.use(express.json())
 app.use("/", userRouter)
-app.use(cookieParser())
+app.use("/", projectRouter)
+app.use("/", userProfileRouter)
+app.use("/", npmModuleRouter)
+
 
 connectDb()
 .then(()=>{
