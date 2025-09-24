@@ -17,28 +17,26 @@ userRouter.post("/signup", async(req,res)=>{
         })
         const token = await user.getJWT();
         res.cookie("token", token);
-        console.log("data saved successfully")
-        res.json({status:true, message:"data received", data:user})
+        res.status(201).json({status:true, message:"data received", data:user})
     } catch (error) {
-        console.log("Error: in signup", error?.message);
-        res.json({status:false, message:"Error : "+ error?.message})
+        console.log("Error: in signup", error);
+        res.status(500).json({status:false, message:"Error : "+ error?.message})
     }
 })
 userRouter.post("/login",async(req,res)=>{
     try {
         const {email, password} = req.body;
-        const user = await User.findOne({email:email}).select("-_id -createdAt -updatedAt")
+        const user = await User.findOne({email:email}).select(" -createdAt -updatedAt")
         if(!user) throw new Error("Invalid credential");
         const isPasswordSame =await user.comparePassword(password);
         if(!isPasswordSame) throw new Error("Invalid Credential");
         const token  =await user.getJWT();
         res.cookie("token", token);
         req.user = user;
-        console.log("Login successful");
-        res.json({status:true, message:"Login successful",data:user})
+        res.status(200).json({status:true, message:"Login successful",data:user})
     } catch (error) {
-        console.log("error: in login ", error?.message);
-        res.json({status:false, message:"Login failed"});
+        console.log("error: in login ", error);
+        res.status(500).json({status:false, message:error?.message});
     }
 })
 
@@ -47,12 +45,10 @@ userRouter.post("/logout",async(req,res)=>{
         res.cookie("token", null, {
             expires: new Date(Date.now())
         })
-        console.log("logout successful");
-        res.json({status:true, message:"Logout successful"})
-        
+        res.status(200).json({status:true, message:"Logout successful"})        
     } catch (error) {
-        console.log("error:  in logout", error?.message);
-        res.json({status:false, message:error?.message})
+        console.log("error:  in logout", error);
+        res.status(500).json({status:false, message:error?.message})
     }
 })
 

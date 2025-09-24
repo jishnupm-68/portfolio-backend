@@ -7,6 +7,7 @@ const projectRouter = require("./src/routes/project");
 const userProfileRouter = require("./src/routes/userProfile");
 const npmModuleRouter = require("./src/routes/npmModule");
 const skillRouter = require("./src/routes/skill");
+const educationRouter = require("./src/routes/education");
 require("dotenv").config()
 
 app.use(cookieParser())
@@ -16,6 +17,7 @@ app.use("/", projectRouter)
 app.use("/", userProfileRouter)
 app.use("/", npmModuleRouter)
 app.use("/", skillRouter)
+app.use("/", educationRouter)
 
 
 connectDb()

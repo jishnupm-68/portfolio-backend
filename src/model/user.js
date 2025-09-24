@@ -4,6 +4,8 @@ const {CITY_PREFERENCE, LOCATION_PREFERENCE,GENDER_OPTIONS, DEFAULT_PROFILE_IMAG
 const bcrypt = require("bcrypt")
 const  jwt = require('jsonwebtoken');
 require("../model/skill")
+require("../model/npmModule")
+require("../model/education")
 const userSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -77,21 +79,11 @@ const userSchema = new mongoose.Schema({
     locationPreference:{
         type: [String],
         enum: LOCATION_PREFERENCE,
-        validate(value) {
-            if (!LOCATION_PREFERENCE.includes(value)) {
-                throw new Error("Location preference must be either 'remote', 'hybrid', 'onsite', or 'any'");
-            }
-        },
         default:["any"],
     },
     cityPreference:{
         type: [String],
         enum: CITY_PREFERENCE,
-        validate(value) {
-            if (!CITY_PREFERENCE.includes(value)) {
-                throw new Error("City preference must be either 'bangalore', 'kerala','calicut',  'kochi', 'chennai', 'trivandrum', or 'any'");
-            }
-        },
         default:["any"],
     },
 
@@ -116,11 +108,10 @@ const userSchema = new mongoose.Schema({
         ref:"Experience",
         default:[],
     },
-    npmModules:{
+    techStack:{
         type:[mongoose.Schema.Types.ObjectId],
-        ref:"NpmModule",
+        ref:"TechStack",
         default:[],
-
     }
 },
 {timestamps:true})
@@ -141,8 +132,6 @@ const userSchema = new mongoose.Schema({
     const result = await bcrypt.compare(input, hash);
     return result
  }
- 
-
 const User = mongoose.model("User", userSchema)
 
 module.exports = User
