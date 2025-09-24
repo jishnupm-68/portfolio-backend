@@ -16,6 +16,7 @@ const skillSchema = new mongoose.Schema({
         type:String,
         required:true,
         trim:true,
+        unique:true,
         minlength:[1, "Skill name must be at least 1 character"],
         maxlength:[100, "Skill name must be at most 100 characters"]
     },

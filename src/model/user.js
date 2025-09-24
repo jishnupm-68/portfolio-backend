@@ -3,6 +3,7 @@ const validator = require("validator");
 const {CITY_PREFERENCE, LOCATION_PREFERENCE,GENDER_OPTIONS, DEFAULT_PROFILE_IMAGE_URL} = require("../utils/constants")
 const bcrypt = require("bcrypt")
 const  jwt = require('jsonwebtoken');
+require("../model/skill")
 const userSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -73,8 +74,8 @@ const userSchema = new mongoose.Schema({
         },
         default:[DEFAULT_PROFILE_IMAGE_URL]
     }],
-    locationPreference:[{
-        type: String,
+    locationPreference:{
+        type: [String],
         enum: LOCATION_PREFERENCE,
         validate(value) {
             if (!LOCATION_PREFERENCE.includes(value)) {
@@ -82,9 +83,9 @@ const userSchema = new mongoose.Schema({
             }
         },
         default:["any"],
-    }],
-    cityPreference:[{
-        type: String,
+    },
+    cityPreference:{
+        type: [String],
         enum: CITY_PREFERENCE,
         validate(value) {
             if (!CITY_PREFERENCE.includes(value)) {
@@ -92,30 +93,35 @@ const userSchema = new mongoose.Schema({
             }
         },
         default:["any"],
-    }],
+    },
 
-    projects: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Project"
-    }],
+    projects: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Project",
+        default:[],
+    },
 
-    education:[{
-        type:mongoose.Schema.Types.ObjectId,
+    education:{
+        type:[mongoose.Schema.Types.ObjectId],
         ref:"Education",
-    }],
-    skill:[{
-        type:mongoose.Schema.Types.ObjectId,
+        default:[],
+    },
+    skill:{
+        type:[mongoose.Schema.Types.ObjectId],
         ref:"Skill",
-    }],
-    experience:[{
-        type:mongoose.Schema.Types.ObjectId,
+        default:[]
+    },
+    experience:{
+        type:[mongoose.Schema.Types.ObjectId],
         ref:"Experience",
-    }],
-    npmModules:[{
-        type:mongoose.Schema.Types.ObjectId,
+        default:[],
+    },
+    npmModules:{
+        type:[mongoose.Schema.Types.ObjectId],
         ref:"NpmModule",
+        default:[],
 
-    }]
+    }
 },
 {timestamps:true})
 

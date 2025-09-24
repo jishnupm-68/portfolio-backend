@@ -27,7 +27,7 @@ userRouter.post("/signup", async(req,res)=>{
 userRouter.post("/login",async(req,res)=>{
     try {
         const {email, password} = req.body;
-        const user = await User.findOne({email:email})  
+        const user = await User.findOne({email:email}).select("-_id -createdAt -updatedAt")
         if(!user) throw new Error("Invalid credential");
         const isPasswordSame =await user.comparePassword(password);
         if(!isPasswordSame) throw new Error("Invalid Credential");
@@ -35,7 +35,7 @@ userRouter.post("/login",async(req,res)=>{
         res.cookie("token", token);
         req.user = user;
         console.log("Login successful");
-        res.json({status:true, message:"Login successful"})
+        res.json({status:true, message:"Login successful",data:user})
     } catch (error) {
         console.log("error: in login ", error?.message);
         res.json({status:false, message:"Login failed"});
