@@ -11,7 +11,7 @@ npmModuleRouter.get('/user/npmModules', async (req, res) => {
         res.status(200).json({
             status:true,
             message:"NPM Modules fetched successfully",
-             npmModules: npmModules || [] 
+             data: npmModules || [] 
         });
     } catch (error) {
         console.log("Error: while fetching npm modules", error);
@@ -28,7 +28,6 @@ npmModuleRouter.patch('/user/npmModules', userAuth, async (req, res) => {
         const { techStack, helperName } = req.body;
         if (!user) return res.status(401).json({status:false, message: "Unauthorized" });
         if (!techStack) return res.status(400).json({status:false, message: "Tech stack is required" });
-        console.log(helperName, helperName.length)
         if (helperName.length<=0) throw new  Error("helpername is required");
         let existingNpmModule  =await TechStack.findOne({ techStack: techStack });
         if(!existingNpmModule){
@@ -41,7 +40,8 @@ npmModuleRouter.patch('/user/npmModules', userAuth, async (req, res) => {
                 { $addToSet: { helperName: { $each: helperName || [] } } },
                 { new: true, runValidators: true });
         }
-        res.status(200).json({status:true, message: "NPM Module added successfully", data: existingNpmModule });
+        const npmModules = await User.findOne().populate("techStack").select('techStack -_id');
+        res.status(200).json({status:true, message: "NPM Module added successfully", data: npmModules });
     } catch (error) {
         console.log("Error: while adding npm module", error);
         res.status(500).json({
@@ -63,7 +63,8 @@ npmModuleRouter.delete('/user/npmModules/:techStack/:helperName', userAuth, asyn
             message: "NPM Module not found" });
         existingNpmModule.helperName = existingNpmModule.helperName.filter(name => name !== helperName);
         await existingNpmModule.save();
-        res.status(200).json({status:true, message: "NPM Module deleted successfully", data: existingNpmModule });
+        const npmModules = await User.findOne().populate("techStack").select('techStack -_id');
+        res.status(200).json({status:true, message: "NPM Module deleted successfully", data: npmModules });
     } catch (error) {
         console.log("Error: while deleting npm module", error);
         res.status(500).json({

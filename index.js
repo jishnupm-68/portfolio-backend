@@ -8,8 +8,12 @@ const userProfileRouter = require("./src/routes/userProfile");
 const npmModuleRouter = require("./src/routes/npmModule");
 const skillRouter = require("./src/routes/skill");
 const educationRouter = require("./src/routes/education");
+const cors = require("cors")
 require("dotenv").config()
-
+app.use(cors({
+    origin:process.env.CORS_ORIGIN_STRING,
+    credentials:true
+}))
 app.use(cookieParser())
 app.use(express.json())
 app.use("/", userRouter)
