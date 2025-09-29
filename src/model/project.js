@@ -20,7 +20,7 @@ const projectSchema = new Schema({
         },
     imageUrl: {
          type: String,
-          required: true,
+          
           validate(value){
             if(!validator.isURL(value)) throw new Error("Invalid URL format for imageUrl");
             },

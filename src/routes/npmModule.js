@@ -33,7 +33,7 @@ npmModuleRouter.patch('/user/npmModules', userAuth, async (req, res) => {
         if(!existingNpmModule){
             existingNpmModule = await TechStack.create({ techStack, helperName: helperName || [] });
             await User.findByIdAndUpdate(user._id,
-                { $addToSet: { npmModules: existingNpmModule._id } },
+                { $addToSet: { techStack: existingNpmModule._id } },
                 { new: true, runValidators: true });
         }else{
             existingNpmModule = await TechStack.findByIdAndUpdate(existingNpmModule._id,

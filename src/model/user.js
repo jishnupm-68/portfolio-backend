@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
     description:{
         type:String,
         trim:true,
-        maxlength:[1000, "Description must be at most 1000 characters"]
+        maxlength:[3000, "Description must be at most 1000 characters"]
     },
     designation:{
         type:String,

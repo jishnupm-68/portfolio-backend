@@ -28,7 +28,9 @@ projectRouter.post("/user/projects",userAuth, async(req,res)=>{
         if(!project) return res.json({status:false, message:"Project creation failed"})
         const updatedUser = await User.findByIdAndUpdate(user._id, {$addToSet:{projects:project._id}},{new:true})
         .populate("projects").select("projects -_id")
-        res.staus(200).json({status:true, message:"Project created successfully", data:updatedUser})
+        console.log(project,updatedUser
+        )
+        res.status(200).json({status:true, message:"Project created successfully", data:updatedUser})
     } catch (error) {
         console.log("Error: in project adding ", error);
         res.status(500).json({status:false, message: error?.message})
@@ -61,7 +63,10 @@ projectRouter.delete("/user/projects/:_id",userAuth, async(req, res)=>{
         if(!result) return res.json({status:false, message:"Deletion failed"})
         let userData= await User.findByIdAndUpdate(user._id,{$pull:{projects:result._id}},{new:true})
         .populate("projects").select("projects -_id")
-        res.status(200).json({status:true, message:"project deleted successfully",data:userData})
+
+        
+        res.status(200).json({status:true,
+             message:"project deleted successfully",data:userData})
     } catch (error) {
         console.log("Error while deleting the project", error);
         res.status(500).json({status:false, message:error?.message});
