@@ -6,7 +6,9 @@ const educationRouter = express.Router();
 
 educationRouter.get('/user/education', async(req,res)=>{
     try {
-        const education = await User.findOne().populate("education").select("education -_id")
+        const education = await User.findOne().populate({path:"education", options:{
+            sort:{startDate:1}
+        }}).select("education -_id")
         res.status(200).json({status:true, message:'education fetched successfully', data:education })
     } catch (error) {
         console.log("error while loading the education", error)

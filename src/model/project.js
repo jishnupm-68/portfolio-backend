@@ -16,14 +16,15 @@ const projectSchema = new Schema({
          type: String,
           required: true,
           minlength: 10,
-          maxlength: 500
+          maxlength: 2500
         },
     imageUrl: {
          type: String,
           
           validate(value){
-            if(!validator.isURL(value)) throw new Error("Invalid URL format for imageUrl");
-            },
+            if(value !== "" && !validator.isURL(value)) throw new Error("Invalid URL format for imageUrl");
+             
+          },
             default: DEFAULT_PROJECT_IMAGE_URL
         },
     liveProjectUrl: {

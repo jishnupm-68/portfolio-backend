@@ -2,6 +2,7 @@ const express= require("express");
 const Project = require("../model/project");
 const User = require("../model/user");
 const { userAuth } = require("../../middlewares/userAuth");
+const {  DEFAULT_PROJECT_IMAGE_URL } = require("../utils/constants");
 const projectRouter = express.Router();
 
 projectRouter.get("/user/projects", async(req,res)=>{
@@ -17,11 +18,13 @@ projectRouter.get("/user/projects", async(req,res)=>{
 projectRouter.post("/user/projects",userAuth, async(req,res)=>{
     try {
         const user = req.user;
+
         if(!user) return res.status(401).json({status:false, message:"User not found"})
-        const {title, description, imageUrl, liveProjectUrl, frontEndUrl, backEndUrl, technologies, category} = req.body;
+        let {title, description, imageUrl, liveProjectUrl, frontEndUrl, backEndUrl, technologies, category} = req.body;
         if(!title || !description || !liveProjectUrl || !frontEndUrl || !backEndUrl || !category){
             return res.json({status:false, message:"Required fields are missing"})
         }
+        imageUrl= (imageUrl=="")?DEFAULT_PROJECT_IMAGE_URL:imageUrl
         const project = await Project.create({
             title, description, imageUrl, liveProjectUrl, frontEndUrl, backEndUrl, technologies, category
         });
@@ -41,7 +44,8 @@ projectRouter.patch("/user/projects", userAuth,async(req, res)=>{
     try {
         const user =  req.user;
         if(!user) return res.json({status:false, message:"Unauthorized"});
-        const {_id,title, description, imageUrl, liveProjectUrl, frontEndUrl, backEndUrl, technologies, category} = req.body;
+        let {_id,title, description, imageUrl, liveProjectUrl, frontEndUrl, backEndUrl, technologies, category} = req.body;
+        imageUrl= (imageUrl=="")?DEFAULT_PROJECT_IMAGE_URL:imageUrl
         const project = await Project.findByIdAndUpdate(_id,
              {title, description, imageUrl, liveProjectUrl, frontEndUrl, backEndUrl, technologies, category},
              {runValidators:true, new:true})
