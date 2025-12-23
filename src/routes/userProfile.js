@@ -2,6 +2,7 @@
 const express = require("express");
 const User = require("../model/user");
 const { userAuth } = require("../../middlewares/userAuth");
+const imageProcess = require("../../helper/imageProcess");
 const userProfileRouter = express.Router();
 
 userProfileRouter.get("/user/profile", async(req,res)=>{
@@ -18,7 +19,8 @@ userProfileRouter.patch("/user/profile", userAuth, async(req,res)=>{
     try {
         const user = req.user;
         if(!user) return res.status(401).json({status:false, message:"User not found"});
-        const {name, age, gender, description, designation, contactEmail, profileImageUrl, locationPreference, cityPreference} = req.body;
+        const {name, age, gender, description, designation, contactEmail, profileImageUrl, locationPreference, cityPreference, croppedAreaPixels} = req.body;
+        const profileImageUploadUrl = await imageProcess(profileImageUrl, croppedAreaPixels);
         const updatedProfile = await User.findByIdAndUpdate(user._id, {
             name, 
             age,
@@ -26,7 +28,7 @@ userProfileRouter.patch("/user/profile", userAuth, async(req,res)=>{
             description,
             designation,
             contactEmail,
-            profileImageUrl,
+            profileImageUrl:profileImageUploadUrl,
             locationPreference,
             cityPreference
         },{ runValidators:true,
