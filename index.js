@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require("express");
 const { connectDb } = require("./config/db");
 const userRouter = require("./src/routes/user");
@@ -9,13 +10,18 @@ const npmModuleRouter = require("./src/routes/npmModule");
 const skillRouter = require("./src/routes/skill");
 const educationRouter = require("./src/routes/education");
 const cors = require("cors")
-require("dotenv").config()
+
 app.use(cors({
     origin:process.env.CORS_ORIGIN_STRING,
     credentials:true
 }))
+app.use((req,res,next)=>{
+  console.log("REQ:", req.method, req.url)
+  next()
+})
+
 app.use(cookieParser())
-app.use(express.json())
+app.use(express.json({limit:"10mb"}))
 app.use("/", userRouter)
 app.use("/", projectRouter)
 app.use("/", userProfileRouter)
@@ -28,7 +34,7 @@ connectDb()
 .then(()=>{
     console.log("DB connected successfully")
     app.listen(process.env.PORT,()=>{
-    console.log("server is running")
+    console.log("server is running ",process.env.PORT)
     })
 })
 .catch((error)=>{
